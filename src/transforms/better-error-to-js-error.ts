@@ -1,12 +1,13 @@
-import type {
-  SourceFile,
-  NewExpression,
-  StringLiteral,
-  ObjectLiteralExpression,
-  TemplateExpression,
-  NoSubstitutionTemplateLiteral,
+import {
+  type NewExpression,
+  Node,
+  type NoSubstitutionTemplateLiteral,
+  type ObjectLiteralExpression,
+  type SourceFile,
+  type StringLiteral,
+  SyntaxKind,
+  type TemplateExpression,
 } from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
 
 export const projectRoot =
   '/home/admin/src/github.com/stayradiated/volatile/svc-server'
@@ -77,22 +78,29 @@ const transformError = (node: NewExpression) => {
     const identifier = property.getFirstChildByKind(SyntaxKind.Identifier)
     const key = identifier?.getText()
     switch (key) {
-      case 'message':
+      case 'message': {
         message =
           property.getFirstChildByKind(SyntaxKind.StringLiteral) ||
           property.getFirstChildByKind(SyntaxKind.TemplateExpression) ||
           property.getFirstChildByKind(SyntaxKind.NoSubstitutionTemplateLiteral)
         break
-      case 'context':
+      }
+
+      case 'context': {
         context = property.getFirstChildByKindOrThrow(
           SyntaxKind.ObjectLiteralExpression,
         )
         break
-      case 'cause':
+      }
+
+      case 'cause': {
         cause = property.getChildAtIndex(2)
         break
-      default:
+      }
+
+      default: {
         throw new Error(`Unrecognised property: ${key}`)
+      }
     }
   }
 

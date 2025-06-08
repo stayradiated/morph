@@ -1,7 +1,6 @@
 import * as path from 'node:path'
 import { Project } from 'ts-morph'
-
-import * as transform from './transforms/import-tilde.js'
+import * as transform from './transforms/kysely-if-statements.ts'
 
 const project = new Project({
   tsConfigFilePath: path.join(transform.projectRoot, 'tsconfig.json'),

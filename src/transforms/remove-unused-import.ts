@@ -1,5 +1,4 @@
-import type { SourceFile } from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
+import { Node, type SourceFile, SyntaxKind } from 'ts-morph'
 
 export const projectRoot =
   '/home/admin/src/github.com/stayradiated/volatile/svc-server'

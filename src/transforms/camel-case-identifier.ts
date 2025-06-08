@@ -1,11 +1,12 @@
-import type {
-  SourceFile,
-  Identifier,
-  ImportDeclaration,
-  StringLiteral,
-} from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
 import camelCase from 'camelcase'
+import {
+  type Identifier,
+  type ImportDeclaration,
+  Node,
+  type SourceFile,
+  type StringLiteral,
+  SyntaxKind,
+} from 'ts-morph'
 
 export const projectRoot = '/home/admin/src/github.com/Runn-Fast/runn'
 
@@ -22,7 +23,7 @@ const titleCase = (word: string): string => {
     return word
   }
 
-  return word[0]!.toUpperCase() + camelCase(word).slice(1)
+  return word[0].toUpperCase() + camelCase(word).slice(1)
 }
 
 const transformIdentifier = (node: Identifier) => {
@@ -34,7 +35,7 @@ const transformIdentifier = (node: Identifier) => {
     // We are skipping identifiers that are ALL_CAPS
     text.toUpperCase() !== text
   ) {
-    const isTitleCase = text[0]!.toUpperCase() === text[0]
+    const isTitleCase = text[0].toUpperCase() === text[0]
     const updatedText = isTitleCase ? titleCase(text) : camelCase(text)
     console.log(text, '→', updatedText)
     node.replaceWithText(updatedText)

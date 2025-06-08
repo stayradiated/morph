@@ -1,5 +1,4 @@
-import type { SourceFile, NewExpression } from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
+import { type NewExpression, Node, type SourceFile, SyntaxKind } from 'ts-morph'
 
 export const projectRoot =
   '/home/admin/src/github.com/stayradiated/volatile/svc-server'
@@ -44,11 +43,11 @@ const transformError = (node: NewExpression) => {
 
   const fullText = templateExpression.getText()
   const indexOfJson = fullText.indexOf('${JSON.stringify({')
-  if (indexOfJson >= 0) {
+  if (indexOfJson !== -1) {
     const message = fullText.slice(1, indexOfJson).trim()
     const context = /JSON.stringify\({([^}]+)}\)/
-      .exec(fullText.slice(indexOfJson))![1]!
-      .trim()
+      .exec(fullText.slice(indexOfJson))?.[1]
+      ?.trim()
     console.log({ message, context })
     templateExpression.replaceWithText(
       `messageWithContext(\`${message}\`, { ${context} })`,

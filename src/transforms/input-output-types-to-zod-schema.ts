@@ -1,6 +1,11 @@
-import type { TypeAliasDeclaration, SourceFile } from 'ts-morph'
-import { Node, SyntaxKind, VariableDeclarationKind } from 'ts-morph'
 import camelCase from 'camelcase'
+import {
+  Node,
+  type SourceFile,
+  SyntaxKind,
+  type TypeAliasDeclaration,
+  VariableDeclarationKind,
+} from 'ts-morph'
 
 export const projectRoot =
   '/home/admin/src/github.com/stayradiated/volatile/svc-server'
@@ -58,7 +63,7 @@ const toZodType = (type: string): string => {
   let isOptional = false
 
   if (type.endsWith('| undefined')) {
-    type = type.split('| undefined')[0]!.trim()
+    type = type.split('| undefined')[0]?.trim()
     isOptional = true
   }
 

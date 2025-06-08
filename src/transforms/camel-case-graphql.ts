@@ -1,7 +1,11 @@
 import path from 'node:path'
-import type { SourceFile, TaggedTemplateExpression } from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
 import camelCase from 'camelcase'
+import {
+  Node,
+  type SourceFile,
+  SyntaxKind,
+  type TaggedTemplateExpression,
+} from 'ts-morph'
 
 export const projectRoot = '/home/admin/src/github.com/Runn-Fast/runn'
 
@@ -12,12 +16,12 @@ const titleCase = (word: string): string => {
     return word
   }
 
-  return word[0]!.toUpperCase() + camelCase(word).slice(1)
+  return word[0].toUpperCase() + camelCase(word).slice(1)
 }
 
 const snakeCase = (word: string): string => {
   return camelCase(word)
-    .replace(/[A-Z]/g, (letter) => `_${letter}`)
+    .replaceAll(/[A-Z]/g, (letter) => `_${letter}`)
     .toLowerCase()
 }
 
@@ -46,10 +50,10 @@ const typeList = new Set(['string', 'int', 'boolean'])
 const enums = new Set(['asc', 'desc'])
 
 const camelCaseGraphQLQuery = (input: string, filename: string): string => {
-  const relayPrefixFromFilename = /^\w+/.exec(filename)![0]!
+  const relayPrefixFromFilename = /^\w+/.exec(filename)?.[0]
 
   return input
-    .replace(/\w+/g, (word) => {
+    .replaceAll(/\w+/g, (word) => {
       if (blackList.has(word)) {
         return word
       }
@@ -69,37 +73,40 @@ const camelCaseGraphQLQuery = (input: string, filename: string): string => {
       }
 
       if (word.startsWith('_')) {
-        return '_' + camelCase(word)
+        return `_${camelCase(word)}`
       }
 
       return camelCase(word)
     })
-    .replace(/fragment (\w+) on (\w+)/g, (_line, fragmentName, modelName) => {
-      modelName = blackList.has(modelName) ? modelName : titleCase(modelName)
-      fragmentName = toRelayName(fragmentName, relayPrefixFromFilename)
-      return `fragment ${fragmentName} on ${modelName}`
-    })
-    .replace(/\.{3}(\w+)/g, (_line, fragmentName) => {
+    .replaceAll(
+      /fragment (\w+) on (\w+)/g,
+      (_line, fragmentName, modelName) => {
+        modelName = blackList.has(modelName) ? modelName : titleCase(modelName)
+        fragmentName = toRelayName(fragmentName, relayPrefixFromFilename)
+        return `fragment ${fragmentName} on ${modelName}`
+      },
+    )
+    .replaceAll(/\.{3}(\w+)/g, (_line, fragmentName) => {
       fragmentName = fragmentName.startsWith('use')
         ? fragmentName
         : titleCase(fragmentName)
       return `...${fragmentName}`
     })
-    .replace(
+    .replaceAll(
       /(query|mutation|subscription) (\w+)/g,
       (_line, queryType, queryName) => {
         queryName = toRelayName(queryName, relayPrefixFromFilename)
         return `${queryType} ${queryName}`
       },
     )
-    .replace(/args: {([^}]+)}/g, (_line, args: string) => {
+    .replaceAll(/args: {([^}]+)}/g, (_line, args: string) => {
       return (
         'args: {' +
         args
           .split(',')
           .map((pair) => {
             const [key, value] = pair.trim().split(':')
-            return `${snakeCase(key!)}: ${value}`
+            return `${snakeCase(key)}: ${value}`
           })
           .join(',') +
         '}'

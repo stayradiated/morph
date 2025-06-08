@@ -1,6 +1,5 @@
 import path from 'node:path'
-import type { SourceFile } from 'ts-morph'
-import { Node, SyntaxKind } from 'ts-morph'
+import { Node, type SourceFile, SyntaxKind } from 'ts-morph'
 
 export const projectRoot = '/home/admin/src/github.com/Runn-Fast/runn'
 
@@ -61,10 +60,10 @@ export const transformSourceFile = (sourceFile: SourceFile) => {
         rawRelativePath === ''
           ? './index'
           : rawRelativePath.endsWith('.')
-          ? `${rawRelativePath}/index`
-          : rawRelativePath.startsWith('.')
-          ? rawRelativePath
-          : `./${rawRelativePath}`
+            ? `${rawRelativePath}/index`
+            : rawRelativePath.startsWith('.')
+              ? rawRelativePath
+              : `./${rawRelativePath}`
 
       if (relativePath.startsWith('./')) {
         if (relativePath !== rawImportPath) {
